@@ -3,8 +3,30 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#4f46e5">
+    <meta name="description" content="Attendance Management System for Educational Institutions">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="Attendance">
+    <link rel="manifest" href="/attendance_system/manifest.json">
+    <link rel="apple-touch-icon" href="/attendance_system/assets/images/icon-192.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="/attendance_system/assets/images/icon-192.png">
     <title>Attendance System</title>
     <link rel="stylesheet" href="/attendance_system/assets/css/style.css">
+    <!-- Register Service Worker -->
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', function() {
+                navigator.serviceWorker.register('/attendance_system/sw.js')
+                    .then(function(registration) {
+                        console.log('Service Worker registered successfully:', registration.scope);
+                    })
+                    .catch(function(error) {
+                        console.log('Service Worker registration failed:', error);
+                    });
+            });
+        }
+    </script>
 </head>
 <body>
     <?php if(isset($_SESSION['user_id'])): ?>

@@ -5,13 +5,13 @@ const DYNAMIC_CACHE = 'attendance-dynamic-v1.0.0';
 
 // Files to cache immediately
 const STATIC_ASSETS = [
-  '/attendance_system/',
-  '/attendance_system/index.php',
-  '/attendance_system/assets/css/style.css',
-  '/attendance_system/assets/js/script.js',
-  '/attendance_system/manifest.json',
-  '/attendance_system/assets/images/icon-192.png',
-  '/attendance_system/assets/images/icon-512.png'
+  './',
+  './index.php',
+  './assets/css/style.css',
+  './assets/js/script.js',
+  './manifest.json',
+  './assets/images/icon-192.png',
+  './assets/images/icon-512.png'
 ];
 
 // Install event - cache static assets
@@ -83,7 +83,7 @@ self.addEventListener('fetch', event => {
             console.log('Service Worker: Fetch failed, returning offline page');
             // Return a basic offline page for navigation requests
             if (event.request.destination === 'document') {
-              return caches.match('/attendance_system/index.php');
+              return caches.match('./index.php');
             }
           });
       })
@@ -111,9 +111,9 @@ self.addEventListener('push', event => {
   if (event.data) {
     const data = event.data.json();
     const options = {
-      body: data.body,
-      icon: '/attendance_system/assets/images/icon-192.png',
-      badge: '/attendance_system/assets/images/icon-192.png',
+    body: data.body,
+    icon: './assets/images/icon-192.png',
+    badge: './assets/images/icon-192.png',
       vibrate: [100, 50, 100],
       data: {
         dateOfArrival: Date.now(),
@@ -132,6 +132,6 @@ self.addEventListener('notificationclick', event => {
   event.notification.close();
 
   event.waitUntil(
-    clients.openWindow('/attendance_system/index.php')
+    clients.openWindow('./index.php')
   );
 });

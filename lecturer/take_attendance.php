@@ -1,7 +1,6 @@
 <?php
 session_start();
 include '../config/db_connect.php';
-include '../includes/header.php';
 include '../includes/functions.php';
 
 // Security: Check if user is a lecturer
@@ -31,6 +30,8 @@ $course = $course_result->fetch_assoc();
 
 // Get enrolled students
 $students_result = getEnrolledStudents($conn, $course_id);
+// Include header after authentication and any potential redirects
+include '../includes/header.php';
 ?>
 
 <div class="container">

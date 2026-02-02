@@ -124,6 +124,9 @@ $current_hour = (int)date('H');
                                 <?php if ($item['type'] == 'recurring'): ?>
                                 <!-- Recurring Class (from course schedule) -->
                                 <div class="grid-item recurring-class <?php echo getScheduleTypeClass($item['schedule_type']); ?>">
+                                    <?php if (!empty($item['course_color'])): ?>
+                                    <span class="course-color-dot" style="background-color: <?php echo htmlspecialchars($item['course_color']); ?>;"></span>
+                                    <?php endif; ?>
                                     <span class="item-course"><?php echo htmlspecialchars($item['course_code']); ?></span>
                                     <span class="item-type"><?php echo getScheduleTypeName($item['schedule_type']); ?></span>
                                     <span class="item-time">
@@ -137,7 +140,13 @@ $current_hour = (int)date('H');
                                 <?php elseif ($item['type'] == 'personal'): ?>
                                 <!-- Personal Schedule Item -->
                                 <div class="grid-item personal-item <?php echo getPersonalScheduleTypeClass($item['schedule_type']); ?>">
+                                    <?php if (!empty($item['course_color'])): ?>
+                                    <span class="course-color-dot" style="background-color: <?php echo htmlspecialchars($item['course_color']); ?>;"></span>
+                                    <?php endif; ?>
                                     <span class="item-title"><?php echo htmlspecialchars($item['title']); ?></span>
+                                    <?php if (!empty($item['course_code'])): ?>
+                                    <span class="item-course" title="<?php echo htmlspecialchars($item['course_name'] ?? $item['course_code']); ?>">(<?php echo htmlspecialchars($item['course_code']); ?>)</span>
+                                    <?php endif; ?>
                                     <span class="item-type"><?php echo getPersonalScheduleTypeName($item['schedule_type']); ?></span>
                                     <span class="item-time">
                                         <?php echo date('g:i', strtotime($item['start_time'])); ?> -

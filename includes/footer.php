@@ -3,6 +3,6 @@
     </div>
 <?php endif; ?>
 
-    <script src="/attendance_system/assets/js/script.js"></script>
+    <script src="../assets/js/script.js"></script>
 </body>
 </html>

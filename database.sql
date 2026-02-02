@@ -20,6 +20,7 @@ CREATE TABLE courses (
     course_name VARCHAR(100),
     course_code VARCHAR(20),
     lecturer_id INT,
+    color VARCHAR(7) DEFAULT '#4f46e5',
     FOREIGN KEY (lecturer_id) REFERENCES users(user_id)
 );
 
@@ -133,6 +134,7 @@ CREATE INDEX idx_schedule_day ON class_schedule(day_of_week, is_active);
 CREATE TABLE personal_schedule (
     schedule_id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT NOT NULL,
+    course_id INT NULL,
     title VARCHAR(100) NOT NULL,
     schedule_type ENUM('class', 'ue', 'ca', 'assignment', 'study', 'personal', 'other') DEFAULT 'class',
     day_of_week ENUM('Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday') NOT NULL,
@@ -143,6 +145,7 @@ CREATE TABLE personal_schedule (
     is_active BOOLEAN DEFAULT TRUE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE,
+    FOREIGN KEY (course_id) REFERENCES courses(course_id) ON DELETE SET NULL,
     UNIQUE KEY unique_personal_schedule (user_id, day_of_week, start_time)
 );
 
@@ -158,10 +161,10 @@ INSERT INTO users (name, email, password, role) VALUES
 ('Bob Student', 'bob@test.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'student');
 
 -- Sample Courses
-INSERT INTO courses (course_name, course_code, lecturer_id) VALUES
-('Software Engineering', 'SE101', 2),
-('Database Systems', 'DB201', 2),
-('Web Development', 'WD301', 2);
+INSERT INTO courses (course_name, course_code, lecturer_id, color) VALUES
+('Software Engineering', 'SE101', 2, '#ef4444'),
+('Database Systems', 'DB201', 2, '#f59e0b'),
+('Web Development', 'WD301', 2, '#22c55e');
 
 -- Enroll students in courses
 INSERT INTO enrollments (student_id, course_id) VALUES
@@ -217,3 +220,26 @@ INSERT INTO user_notification_settings (user_id, notification_type, is_enabled, 
 (2, 'class_reminder', TRUE, 30, 'hours'),
 (2, 'event_reminder', TRUE, 1, 'days'),
 (2, 'course_announcement', TRUE, 1, 'hours');
+
+-- ==================================================
+-- If you're updating an existing database, run the
+-- following ALTER statements to add `course_id` to
+-- `personal_schedule` without losing data.
+-- ==================================================
+-- If you're updating an existing database, use one of the following safe options.
+-- Option A (MySQL 8+): add the column only if it doesn't exist
+-- ALTER TABLE personal_schedule ADD COLUMN IF NOT EXISTS course_id INT NULL AFTER user_id;
+-- CREATE INDEX IF NOT EXISTS idx_personal_course ON personal_schedule(course_id);
+
+-- Option B (all MySQL versions): run this check-and-add sequence manually
+-- 1) Run to confirm whether column exists:
+-- SELECT COUNT(*) FROM INFORMATION_SCHEMA.COLUMNS
+-- WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'personal_schedule' AND COLUMN_NAME = 'course_id';
+-- 2) If result is 0, run:
+-- ALTER TABLE personal_schedule ADD COLUMN course_id INT NULL AFTER user_id;
+-- CREATE INDEX idx_personal_course ON personal_schedule(course_id);
+-- 3) Then (only if you want the FK and it's not already present) add the foreign key:
+-- ALTER TABLE personal_schedule ADD CONSTRAINT fk_personal_course FOREIGN KEY (course_id) REFERENCES courses(course_id) ON DELETE SET NULL;
+
+-- Note: attempting to add the column when it already exists will raise a duplicate-column error (#1060). Check before running.
+

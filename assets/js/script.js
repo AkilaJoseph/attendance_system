@@ -294,7 +294,7 @@ function requestNotificationPermission() {
  * Check for active reminders via API
  */
 function checkReminders() {
-    fetch('/attendance_system/api/get_reminders.php')
+    fetch('../api/get_reminders.php')
         .then(response => response.json())
         .then(data => {
             if (data.success) {
@@ -400,7 +400,7 @@ function showBrowserNotification(reminder) {
     if ('Notification' in window && Notification.permission === 'granted') {
         const notification = new Notification(reminder.title, {
             body: `${reminder.event_type_name} - ${reminder.time_until}\n${reminder.formatted_date}`,
-            icon: '/attendance_system/assets/images/icon.png',
+            icon: '../assets/images/icon.png',
             tag: 'reminder-' + reminder.reminder_id,
             requireInteraction: true
         });
@@ -485,7 +485,7 @@ function playNotificationSound() {
 function dismissReminder(reminderId, event) {
     event.stopPropagation();
 
-    fetch('/attendance_system/actions/mark_reminder_seen.php', {
+    fetch('../actions/mark_reminder_seen.php', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded',
@@ -512,7 +512,7 @@ function dismissReminder(reminderId, event) {
  * Mark all reminders as seen
  */
 function markAllSeen() {
-    fetch('/attendance_system/actions/mark_reminder_seen.php', {
+    fetch('../actions/mark_reminder_seen.php', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded',

@@ -12,6 +12,13 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] != 'lecturer') {
 
 $lecturer_id = $_SESSION['user_id'];
 
+// Load lecturer's courses for dropdown + validation
+$lecturer_courses_result = getLecturerCourses($conn, $lecturer_id);
+$lecturer_courses = [];
+while ($lc = $lecturer_courses_result->fetch_assoc()) {
+    $lecturer_courses[] = $lc;
+}
+
 // Handle form submissions
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (isset($_POST['action'])) {
@@ -23,9 +30,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $end_time = $_POST['end_time'];
             $location = sanitize($_POST['location'] ?? '');
             $description = sanitize($_POST['description'] ?? '');
+            $course_id = isset($_POST['course_id']) && !empty($_POST['course_id']) ? intval($_POST['course_id']) : null;
             $schedule_id = isset($_POST['schedule_id']) && !empty($_POST['schedule_id']) ? intval($_POST['schedule_id']) : null;
 
-            if (savePersonalScheduleSlot($conn, $lecturer_id, $title, $schedule_type, $day_of_week, $start_time, $end_time, $location, $description, $schedule_id)) {
+            // Validate lecturer can only link to their own courses
+            if ($course_id !== null) {
+                $validL = false;
+                foreach ($lecturer_courses as $lc) {
+                    if (intval($lc['course_id']) === $course_id) { $validL = true; break; }
+                }
+                if (!$validL) {
+                    $_SESSION['flash_message'] = "Invalid course selection. You can only link to courses you teach.";
+                    $_SESSION['flash_type'] = 'error';
+                    header("Location: personal_schedule.php");
+                    exit();
+                }
+            }
+
+            if (savePersonalScheduleSlot($conn, $lecturer_id, $title, $schedule_type, $day_of_week, $start_time, $end_time, $location, $description, $course_id, $schedule_id)) {
                 $_SESSION['flash_message'] = $schedule_id ? "Schedule updated successfully!" : "Schedule slot added successfully!";
                 $_SESSION['flash_type'] = 'success';
             } else {
@@ -94,7 +116,13 @@ $schedule_types = [
             <?php foreach ($schedule_data as $item): ?>
             <div class="schedule-list-item">
                 <div class="schedule-list-info">
+                    <?php if (!empty($item['color'])): ?>
+                    <span class="course-color-dot" style="background-color: <?php echo htmlspecialchars($item['color']); ?>;"></span>
+                    <?php endif; ?>
                     <span class="schedule-list-title"><?php echo htmlspecialchars($item['title']); ?></span>
+                    <?php if (!empty($item['course_code'])): ?>
+                    <span class="schedule-list-course" title="<?php echo htmlspecialchars($item['course_name'] ?? $item['course_code']); ?>">(<?php echo htmlspecialchars($item['course_code']); ?>)</span>
+                    <?php endif; ?>
                     <span class="schedule-list-day"><?php echo $item['day_of_week']; ?></span>
                     <span class="schedule-list-time">
                         <?php echo date('g:i A', strtotime($item['start_time'])); ?> -
@@ -146,6 +174,16 @@ $schedule_types = [
                 <select name="schedule_type" id="modal_type" required>
                     <?php foreach ($schedule_types as $value => $label): ?>
                     <option value="<?php echo $value; ?>"><?php echo $label; ?></option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="modal_course">Link to Course (optional)</label>
+                <select name="course_id" id="modal_course">
+                    <option value="">-- None --</option>
+                    <?php foreach ($lecturer_courses as $c): ?>
+                    <option value="<?php echo $c['course_id']; ?>"><?php echo htmlspecialchars($c['course_code'] . ' - ' . $c['course_name']); ?></option>
                     <?php endforeach; ?>
                 </select>
             </div>
@@ -211,6 +249,7 @@ function openEditModal(data) {
     document.getElementById('modal_end').value = data.end_time;
     document.getElementById('modal_location').value = data.location || '';
     document.getElementById('modal_description').value = data.description || '';
+    document.getElementById('modal_course').value = data.course_id || '';
 
     document.getElementById('scheduleModal').classList.add('show');
 }
@@ -223,6 +262,22 @@ function closeModal() {
 document.getElementById('scheduleModal').addEventListener('click', function(e) {
     if (e.target === this) {
         closeModal();
+    }
+});
+
+// Client-side validation: ensure selected course is from dropdown options (lecturer)
+document.getElementById('scheduleForm').addEventListener('submit', function(e) {
+    var select = document.getElementById('modal_course');
+    if (select) {
+        var val = select.value;
+        if (val !== '') {
+            var found = Array.from(select.options).some(function(opt) { return opt.value === val; });
+            if (!found) {
+                e.preventDefault();
+                alert('Invalid course selection. Please choose from your courses.');
+                return false;
+            }
+        }
     }
 });
 </script>

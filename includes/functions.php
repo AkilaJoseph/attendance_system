@@ -51,9 +51,10 @@ function getEnrolledStudents($conn, $course_id) {
  * Get courses taught by a lecturer
  */
 function getLecturerCourses($conn, $lecturer_id) {
-    $query = "SELECT course_id, course_name, course_code
-              FROM courses
-              WHERE lecturer_id = $lecturer_id";
+    $hasColor = coursesHasColumn($conn, 'color');
+    $colorSelect = $hasColor ? 'color' : 'NULL AS color';
+    $lecturer_id = (int)$lecturer_id;
+    $query = "SELECT course_id, course_name, course_code, {$colorSelect} FROM courses WHERE lecturer_id = {$lecturer_id}";
 
     return $conn->query($query);
 }
@@ -62,10 +63,13 @@ function getLecturerCourses($conn, $lecturer_id) {
  * Get courses a student is enrolled in
  */
 function getStudentCourses($conn, $student_id) {
-    $query = "SELECT c.course_id, c.course_name, c.course_code
+    $hasColor = coursesHasColumn($conn, 'color');
+    $colorSelect = $hasColor ? 'c.color' : 'NULL AS color';
+    $student_id = (int)$student_id;
+    $query = "SELECT c.course_id, c.course_name, c.course_code, {$colorSelect}
               FROM courses c
               JOIN enrollments e ON c.course_id = e.course_id
-              WHERE e.student_id = $student_id";
+              WHERE e.student_id = {$student_id}";
 
     return $conn->query($query);
 }
@@ -93,6 +97,27 @@ function displayFlashMessage() {
         unset($_SESSION['flash_message']);
         unset($_SESSION['flash_type']);
     }
+}
+
+/**
+ * Check if `courses` table has a specific column (cached)
+ */
+function coursesHasColumn($conn, $column = 'color') {
+    static $cache = [];
+    if (isset($cache[$column])) return $cache[$column];
+
+    $sql = "SELECT COUNT(*) AS cnt FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'courses' AND COLUMN_NAME = ?";
+    $stmt = $conn->prepare($sql);
+    if (!$stmt) {
+        $cache[$column] = false;
+        return false;
+    }
+    $stmt->bind_param('s', $column);
+    $stmt->execute();
+    $res = $stmt->get_result()->fetch_assoc();
+    $exists = ($res && $res['cnt'] > 0);
+    $cache[$column] = $exists;
+    return $exists;
 }
 
 /**
@@ -612,7 +637,10 @@ function getNotificationTypeDescription($type) {
  * Get weekly class schedule for a student (from enrolled courses)
  */
 function getStudentWeeklySchedule($conn, $student_id) {
-    $query = "SELECT cs.*, c.course_name, c.course_code
+    $hasColor = coursesHasColumn($conn, 'color');
+    $colorSelect = $hasColor ? 'c.color' : 'NULL AS color';
+
+    $query = "SELECT cs.*, c.course_name, c.course_code, {$colorSelect}
               FROM class_schedule cs
               JOIN courses c ON cs.course_id = c.course_id
               JOIN enrollments e ON c.course_id = e.course_id
@@ -686,6 +714,7 @@ function buildTimetableGrid($conn, $user_id, $week_start, $role = 'student') {
                 'schedule_type' => $class['schedule_type'],
                 'course_code' => $class['course_code'],
                 'course_name' => $class['course_name'],
+                'course_color' => $class['color'] ?? null,
                 'start_time' => $class['start_time'],
                 'end_time' => $class['end_time'],
                 'room' => $class['room'],
@@ -725,7 +754,7 @@ function buildTimetableGrid($conn, $user_id, $week_start, $role = 'student') {
         $start_hour = (int)date('H', strtotime($item['start_time']));
         $slot_key = sprintf('%02d:00', $start_hour);
 
-        if (isset($grid[$item['day_of_week']][$slot_key])) {
+            if (isset($grid[$item['day_of_week']][$slot_key])) {
             $grid[$item['day_of_week']][$slot_key][] = [
                 'type' => 'personal',
                 'schedule_type' => $item['schedule_type'],
@@ -734,7 +763,11 @@ function buildTimetableGrid($conn, $user_id, $week_start, $role = 'student') {
                 'end_time' => $item['end_time'],
                 'location' => $item['location'],
                 'description' => $item['description'],
-                'schedule_id' => $item['schedule_id']
+                'schedule_id' => $item['schedule_id'],
+                'course_id' => $item['course_id'] ?? null,
+                'course_code' => $item['course_code'] ?? null,
+                'course_name' => $item['course_name'] ?? null,
+                'course_color' => $item['color'] ?? null
             ];
         }
     }
@@ -752,7 +785,10 @@ function buildTimetableGrid($conn, $user_id, $week_start, $role = 'student') {
  * Get weekly schedule for lecturer's courses
  */
 function getLecturerWeeklySchedule($conn, $lecturer_id) {
-    $query = "SELECT cs.*, c.course_name, c.course_code
+    $hasColor = coursesHasColumn($conn, 'color');
+    $colorSelect = $hasColor ? 'c.color' : 'NULL AS color';
+
+    $query = "SELECT cs.*, c.course_name, c.course_code, {$colorSelect}
               FROM class_schedule cs
               JOIN courses c ON cs.course_id = c.course_id
               WHERE c.lecturer_id = ? AND cs.is_active = TRUE
@@ -855,9 +891,14 @@ function getWeekStart($date = null) {
  * Get personal schedule for a user
  */
 function getPersonalSchedule($conn, $user_id) {
-    $query = "SELECT * FROM personal_schedule
-              WHERE user_id = ? AND is_active = TRUE
-              ORDER BY FIELD(day_of_week, 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'), start_time";
+    $hasColor = coursesHasColumn($conn, 'color');
+    $colorSelect = $hasColor ? 'c.color' : 'NULL AS color';
+
+    $query = "SELECT ps.*, c.course_name, c.course_code, {$colorSelect}
+              FROM personal_schedule ps
+              LEFT JOIN courses c ON ps.course_id = c.course_id
+              WHERE ps.user_id = ? AND ps.is_active = TRUE
+              ORDER BY FIELD(ps.day_of_week, 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'), ps.start_time";
 
     $stmt = $conn->prepare($query);
     $stmt->bind_param("i", $user_id);
@@ -868,20 +909,20 @@ function getPersonalSchedule($conn, $user_id) {
 /**
  * Save a personal schedule slot (insert or update)
  */
-function savePersonalScheduleSlot($conn, $user_id, $title, $schedule_type, $day_of_week, $start_time, $end_time, $location, $description, $schedule_id = null) {
+function savePersonalScheduleSlot($conn, $user_id, $title, $schedule_type, $day_of_week, $start_time, $end_time, $location, $description, $course_id = null, $schedule_id = null) {
     if ($schedule_id) {
         // Update existing
         $query = "UPDATE personal_schedule
-                  SET title = ?, schedule_type = ?, day_of_week = ?, start_time = ?, end_time = ?, location = ?, description = ?
+                  SET title = ?, schedule_type = ?, day_of_week = ?, start_time = ?, end_time = ?, location = ?, description = ?, course_id = ?
                   WHERE schedule_id = ? AND user_id = ?";
         $stmt = $conn->prepare($query);
-        $stmt->bind_param("sssssssii", $title, $schedule_type, $day_of_week, $start_time, $end_time, $location, $description, $schedule_id, $user_id);
+        $stmt->bind_param("sssssssiii", $title, $schedule_type, $day_of_week, $start_time, $end_time, $location, $description, $course_id, $schedule_id, $user_id);
     } else {
         // Insert new
-        $query = "INSERT INTO personal_schedule (user_id, title, schedule_type, day_of_week, start_time, end_time, location, description)
-                  VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+        $query = "INSERT INTO personal_schedule (user_id, course_id, title, schedule_type, day_of_week, start_time, end_time, location, description)
+                  VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
         $stmt = $conn->prepare($query);
-        $stmt->bind_param("isssssss", $user_id, $title, $schedule_type, $day_of_week, $start_time, $end_time, $location, $description);
+        $stmt->bind_param("iisssssss", $user_id, $course_id, $title, $schedule_type, $day_of_week, $start_time, $end_time, $location, $description);
     }
 
     return $stmt->execute();

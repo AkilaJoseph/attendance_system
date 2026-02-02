@@ -86,10 +86,10 @@ $at_risk_count = $at_risk_result ? $at_risk_result->num_rows : 0;
     <!-- Filter -->
     <div class="card" style="margin-bottom: 30px;">
         <h3>Filter Settings</h3>
-        <form action="" method="GET" style="margin-top: 15px; display: flex; align-items: end; gap: 15px;">
-            <div class="form-group" style="margin-bottom: 0;">
+        <form action="" method="GET" style="margin-top: 15px; display: flex; flex-wrap: wrap; align-items: end; gap: 15px;">
+            <div class="form-group" style="margin-bottom: 0; flex: 1; min-width: 150px;">
                 <label for="threshold">Attendance Threshold (%)</label>
-                <input type="number" name="threshold" id="threshold" value="<?php echo $threshold; ?>" min="1" max="100" style="width: 120px;">
+                <input type="number" name="threshold" id="threshold" value="<?php echo $threshold; ?>" min="1" max="100">
             </div>
             <button type="submit" class="btn btn-primary">Apply Filter</button>
         </form>
@@ -115,7 +115,11 @@ $at_risk_count = $at_risk_result ? $at_risk_result->num_rows : 0;
                 </tr>
             </thead>
             <tbody>
-                <?php while($row = $low_attendance->fetch_assoc()): ?>
+                <?php
+                $reports_array = [];
+                while($row = $low_attendance->fetch_assoc()) {
+                    $reports_array[] = $row;
+                ?>
                 <tr>
                     <td><?php echo htmlspecialchars($row['student_name']); ?></td>
                     <td><?php echo htmlspecialchars($row['email']); ?></td>
@@ -134,9 +138,46 @@ $at_risk_count = $at_risk_result ? $at_risk_result->num_rows : 0;
                         <?php endif; ?>
                     </td>
                 </tr>
-                <?php endwhile; ?>
+                <?php } ?>
             </tbody>
         </table>
+
+        <!-- Mobile Card View -->
+        <div class="table-responsive-cards">
+            <?php foreach($reports_array as $row):
+                $statusClass = $row['percentage'] < 50 ? 'danger' : 'warning';
+                $statusText = $row['percentage'] < 50 ? 'Critical' : 'Warning';
+                $percentColor = $row['percentage'] < 50 ? 'var(--danger-color)' : 'var(--warning-color)';
+            ?>
+            <div class="table-card">
+                <div class="table-card-header">
+                    <div>
+                        <div class="table-card-title"><?php echo htmlspecialchars($row['student_name']); ?></div>
+                        <div class="table-card-subtitle"><?php echo htmlspecialchars($row['email']); ?></div>
+                    </div>
+                    <span class="alert <?php echo $statusClass; ?>" style="display: inline-block; padding: 4px 10px; margin: 0; font-size: 0.8rem;">
+                        <?php echo $statusText; ?>
+                    </span>
+                </div>
+                <div class="table-card-body">
+                    <div class="table-card-row">
+                        <span class="table-card-label">Course</span>
+                        <span class="table-card-value"><?php echo htmlspecialchars($row['course_code']); ?></span>
+                    </div>
+                    <div class="table-card-row">
+                        <span class="table-card-label">Attended</span>
+                        <span class="table-card-value"><?php echo $row['attended']; ?> / <?php echo $row['total_classes']; ?></span>
+                    </div>
+                    <div class="table-card-row">
+                        <span class="table-card-label">Attendance</span>
+                        <span class="table-card-value" style="color: <?php echo $percentColor; ?>; font-weight: bold; font-size: 1.1rem;">
+                            <?php echo $row['percentage']; ?>%
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <?php endforeach; ?>
+        </div>
     </div>
     <?php else: ?>
         <div class="alert good">

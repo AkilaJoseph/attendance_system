@@ -169,6 +169,33 @@ if ($selected_course > 0) {
                 <?php endforeach; ?>
             </tbody>
         </table>
+
+        <!-- Mobile Card View -->
+        <div class="table-responsive-cards">
+            <?php foreach ($events as $event): ?>
+            <div class="table-card">
+                <div class="table-card-header">
+                    <div>
+                        <div class="table-card-title"><?php echo htmlspecialchars($event['title']); ?></div>
+                        <div class="table-card-subtitle">
+                            <?php echo date('M j, Y', strtotime($event['event_date'])); ?>
+                            <?php if ($event['event_time']): ?> at <?php echo date('g:i A', strtotime($event['event_time'])); ?><?php endif; ?>
+                        </div>
+                    </div>
+                    <span class="event-type-badge <?php echo getEventTypeClass($event['event_type']); ?>">
+                        <?php echo getEventTypeName($event['event_type']); ?>
+                    </span>
+                </div>
+                <div class="table-card-actions">
+                    <form action="../actions/delete_event.php" method="POST" style="flex: 1;" onsubmit="return confirm('Delete this event?');">
+                        <input type="hidden" name="event_id" value="<?php echo $event['event_id']; ?>">
+                        <input type="hidden" name="redirect" value="lecturer/events.php?course_id=<?php echo $selected_course; ?>">
+                        <button type="submit" class="btn btn-danger" style="width: 100%;">Delete Event</button>
+                    </form>
+                </div>
+            </div>
+            <?php endforeach; ?>
+        </div>
     </div>
     <?php else: ?>
         <div class="alert warning">No events created for this course yet.</div>

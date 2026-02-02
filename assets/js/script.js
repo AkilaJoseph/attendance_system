@@ -10,7 +10,81 @@ document.addEventListener('DOMContentLoaded', function() {
     initPercentageCircles();
     initConfirmDialogs();
     initNotifications();
+    initMobileMenu();
 });
+
+/**
+ * ========================================
+ * MOBILE MENU FUNCTIONALITY
+ * ========================================
+ */
+
+/**
+ * Initialize mobile menu
+ */
+function initMobileMenu() {
+    // Close sidebar when clicking on a nav link (mobile)
+    const navLinks = document.querySelectorAll('.sidebar .nav-item');
+    navLinks.forEach(link => {
+        link.addEventListener('click', function() {
+            if (window.innerWidth <= 768) {
+                closeMobileSidebar();
+            }
+        });
+    });
+
+    // Handle resize events
+    let resizeTimer;
+    window.addEventListener('resize', function() {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(function() {
+            if (window.innerWidth > 768) {
+                closeMobileSidebar();
+            }
+        }, 250);
+    });
+
+    // Handle escape key to close sidebar
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            closeMobileSidebar();
+        }
+    });
+}
+
+/**
+ * Toggle mobile sidebar
+ */
+function toggleMobileSidebar() {
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.getElementById('sidebarOverlay');
+    const hamburger = document.getElementById('hamburgerBtn');
+    const body = document.body;
+
+    if (sidebar && overlay) {
+        sidebar.classList.toggle('mobile-open');
+        overlay.classList.toggle('active');
+        hamburger?.classList.toggle('active');
+        body.classList.toggle('sidebar-open');
+    }
+}
+
+/**
+ * Close mobile sidebar
+ */
+function closeMobileSidebar() {
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.getElementById('sidebarOverlay');
+    const hamburger = document.getElementById('hamburgerBtn');
+    const body = document.body;
+
+    if (sidebar && overlay) {
+        sidebar.classList.remove('mobile-open');
+        overlay.classList.remove('active');
+        hamburger?.classList.remove('active');
+        body.classList.remove('sidebar-open');
+    }
+}
 
 /**
  * Login Form Validation
@@ -317,15 +391,21 @@ function checkReminders() {
  * Update the badge count
  */
 function updateBadgeCount(count) {
-    const badge = document.getElementById('reminderBadge');
-    if (badge) {
-        if (count > 0) {
-            badge.textContent = count > 99 ? '99+' : count;
-            badge.style.display = 'flex';
-        } else {
-            badge.style.display = 'none';
+    const badges = [
+        document.getElementById('reminderBadge'),
+        document.getElementById('reminderBadgeMobile')
+    ];
+
+    badges.forEach(badge => {
+        if (badge) {
+            if (count > 0) {
+                badge.textContent = count > 99 ? '99+' : count;
+                badge.style.display = 'flex';
+            } else {
+                badge.style.display = 'none';
+            }
         }
-    }
+    });
 }
 
 /**

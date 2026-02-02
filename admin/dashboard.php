@@ -67,16 +67,37 @@ $courses_result = $conn->query("SELECT c.course_id, c.course_name, c.course_code
                 </tr>
             </thead>
             <tbody>
-                <?php while($user = $users_result->fetch_assoc()): ?>
+                <?php
+                $users_array = [];
+                while($user = $users_result->fetch_assoc()) {
+                    $users_array[] = $user;
+                ?>
                 <tr>
                     <td><?php echo $user['user_id']; ?></td>
                     <td><?php echo htmlspecialchars($user['name']); ?></td>
                     <td><?php echo htmlspecialchars($user['email']); ?></td>
                     <td><?php echo ucfirst($user['role']); ?></td>
                 </tr>
-                <?php endwhile; ?>
+                <?php } ?>
             </tbody>
         </table>
+
+        <!-- Mobile Card View -->
+        <div class="table-responsive-cards">
+            <?php foreach($users_array as $user): ?>
+            <div class="table-card">
+                <div class="table-card-header">
+                    <div>
+                        <div class="table-card-title"><?php echo htmlspecialchars($user['name']); ?></div>
+                        <div class="table-card-subtitle"><?php echo htmlspecialchars($user['email']); ?></div>
+                    </div>
+                    <span class="badge" style="background-color: var(--primary-color); color: white; padding: 4px 10px; border-radius: 12px; font-size: 0.8rem;">
+                        <?php echo ucfirst($user['role']); ?>
+                    </span>
+                </div>
+            </div>
+            <?php endforeach; ?>
+        </div>
     </div>
 
     <!-- Courses Table -->
@@ -92,16 +113,40 @@ $courses_result = $conn->query("SELECT c.course_id, c.course_name, c.course_code
                 </tr>
             </thead>
             <tbody>
-                <?php while($course = $courses_result->fetch_assoc()): ?>
+                <?php
+                $courses_array = [];
+                while($course = $courses_result->fetch_assoc()) {
+                    $courses_array[] = $course;
+                ?>
                 <tr>
                     <td><?php echo $course['course_id']; ?></td>
                     <td><?php echo htmlspecialchars($course['course_code']); ?></td>
                     <td><?php echo htmlspecialchars($course['course_name']); ?></td>
                     <td><?php echo htmlspecialchars($course['lecturer_name'] ?? 'Not Assigned'); ?></td>
                 </tr>
-                <?php endwhile; ?>
+                <?php } ?>
             </tbody>
         </table>
+
+        <!-- Mobile Card View -->
+        <div class="table-responsive-cards">
+            <?php foreach($courses_array as $course): ?>
+            <div class="table-card">
+                <div class="table-card-header">
+                    <div>
+                        <div class="table-card-title"><?php echo htmlspecialchars($course['course_code']); ?></div>
+                        <div class="table-card-subtitle"><?php echo htmlspecialchars($course['course_name']); ?></div>
+                    </div>
+                </div>
+                <div class="table-card-body">
+                    <div class="table-card-row">
+                        <span class="table-card-label">Lecturer</span>
+                        <span class="table-card-value"><?php echo htmlspecialchars($course['lecturer_name'] ?? 'Not Assigned'); ?></span>
+                    </div>
+                </div>
+            </div>
+            <?php endforeach; ?>
+        </div>
     </div>
 </div>
 

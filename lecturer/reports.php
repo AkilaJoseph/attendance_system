@@ -168,6 +168,61 @@ foreach ($attendance_data as $student) {
                 <?php endforeach; ?>
             </tbody>
         </table>
+
+        <!-- Mobile Card View -->
+        <div class="table-responsive-cards">
+            <?php foreach ($attendance_data as $student):
+                $statusClass = '';
+                $statusText = '';
+                if ($student['total_classes'] == 0) {
+                    $statusText = 'No classes yet';
+                } elseif ($student['percentage'] < 50) {
+                    $statusClass = 'danger';
+                    $statusText = 'Critical';
+                } elseif ($student['percentage'] < $threshold) {
+                    $statusClass = 'warning';
+                    $statusText = 'Warning';
+                } else {
+                    $statusClass = 'good';
+                    $statusText = 'Good';
+                }
+
+                $percentColor = 'var(--dark-text)';
+                if ($student['total_classes'] > 0) {
+                    if ($student['percentage'] < 50) $percentColor = 'var(--danger-color)';
+                    elseif ($student['percentage'] < $threshold) $percentColor = 'var(--warning-color)';
+                    else $percentColor = 'var(--success-color)';
+                }
+            ?>
+            <div class="table-card">
+                <div class="table-card-header">
+                    <div>
+                        <div class="table-card-title"><?php echo htmlspecialchars($student['student_name']); ?></div>
+                        <div class="table-card-subtitle"><?php echo htmlspecialchars($student['email']); ?></div>
+                    </div>
+                    <?php if ($statusClass): ?>
+                    <span class="alert <?php echo $statusClass; ?>" style="display: inline-block; padding: 4px 10px; margin: 0; font-size: 0.8rem;">
+                        <?php echo $statusText; ?>
+                    </span>
+                    <?php else: ?>
+                    <span style="opacity: 0.6; font-size: 0.85rem;"><?php echo $statusText; ?></span>
+                    <?php endif; ?>
+                </div>
+                <div class="table-card-body">
+                    <div class="table-card-row">
+                        <span class="table-card-label">Classes Attended</span>
+                        <span class="table-card-value"><?php echo $student['attended']; ?> / <?php echo $student['total_classes']; ?></span>
+                    </div>
+                    <div class="table-card-row">
+                        <span class="table-card-label">Attendance</span>
+                        <span class="table-card-value" style="color: <?php echo $percentColor; ?>; font-weight: bold; font-size: 1.1rem;">
+                            <?php echo $student['percentage']; ?>%
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <?php endforeach; ?>
+        </div>
     </div>
     <?php else: ?>
         <div class="alert warning">No students enrolled in this course.</div>

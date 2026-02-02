@@ -2088,3 +2088,1123 @@ footer p {
         min-width: 100px;
     }
 }
+
+/* ===== Take Attendance Page - Responsive Styles ===== */
+.attendance-controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    align-items: flex-end;
+    margin-bottom: 20px;
+    padding: 20px;
+    background-color: var(--dark-card);
+    border-radius: var(--border-radius);
+}
+
+.attendance-controls .date-picker {
+    flex: 1;
+    min-width: 200px;
+    margin-bottom: 0;
+}
+
+.bulk-actions {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.bulk-actions .btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.btn-icon-text {
+    font-size: 1.1rem;
+}
+
+.student-count {
+    padding: 12px 16px;
+    background-color: rgba(79, 70, 229, 0.15);
+    border-radius: 8px;
+    margin-bottom: 20px;
+    font-weight: 500;
+    color: var(--primary-color);
+}
+
+/* Desktop Table View */
+.desktop-view {
+    display: block;
+}
+
+.mobile-view {
+    display: none;
+}
+
+.attendance-table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: var(--dark-card);
+    border-radius: var(--border-radius);
+    overflow: hidden;
+}
+
+.attendance-table th {
+    background-color: var(--primary-color);
+    color: white;
+    padding: 15px;
+    text-align: left;
+    font-weight: 600;
+}
+
+.attendance-table td {
+    padding: 15px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.attendance-table tr:last-child td {
+    border-bottom: none;
+}
+
+.attendance-table tr:hover {
+    background-color: rgba(79, 70, 229, 0.1);
+}
+
+.student-row .student-name {
+    font-weight: 600;
+}
+
+.student-row .student-email {
+    opacity: 0.7;
+    font-size: 0.9rem;
+}
+
+/* Status Toggle - Desktop */
+.status-toggle {
+    display: flex;
+    gap: 8px;
+}
+
+.status-option {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s;
+    background-color: var(--dark-bg);
+    border: 2px solid transparent;
+}
+
+.status-option input[type="radio"] {
+    display: none;
+}
+
+.status-option.present:hover,
+.status-option.present.active {
+    background-color: rgba(34, 197, 94, 0.2);
+    border-color: var(--success-color);
+    color: var(--success-color);
+}
+
+.status-option.absent:hover,
+.status-option.absent.active {
+    background-color: rgba(239, 68, 68, 0.2);
+    border-color: var(--danger-color);
+    color: var(--danger-color);
+}
+
+.status-label {
+    font-weight: 500;
+}
+
+/* Mobile Card View */
+.student-cards {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.student-card {
+    background-color: var(--dark-card);
+    border-radius: var(--border-radius);
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.student-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.student-avatar {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 1.2rem;
+    color: white;
+    flex-shrink: 0;
+}
+
+.student-details {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 0;
+}
+
+.student-card .student-name {
+    font-weight: 600;
+    font-size: 1rem;
+}
+
+.student-card .student-email {
+    font-size: 0.85rem;
+    opacity: 0.7;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.status-buttons {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+
+.status-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 14px 16px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.3s;
+    background-color: var(--dark-bg);
+    border: 2px solid transparent;
+    font-weight: 600;
+    font-size: 0.95rem;
+}
+
+.status-btn input[type="radio"] {
+    display: none;
+}
+
+.status-btn.present {
+    color: var(--dark-text);
+}
+
+.status-btn.present.active,
+.status-btn.present:active {
+    background-color: var(--success-color);
+    border-color: var(--success-color);
+    color: white;
+}
+
+.status-btn.absent {
+    color: var(--dark-text);
+}
+
+.status-btn.absent.active,
+.status-btn.absent:active {
+    background-color: var(--danger-color);
+    border-color: var(--danger-color);
+    color: white;
+}
+
+/* Submit Actions */
+.attendance-submit {
+    margin-top: 25px;
+    padding: 20px;
+    background-color: var(--dark-card);
+    border-radius: var(--border-radius);
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+    position: sticky;
+    bottom: 15px;
+    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.3);
+}
+
+.btn-lg {
+    padding: 15px 30px;
+    font-size: 1.1rem;
+}
+
+.btn-secondary {
+    background-color: var(--dark-bg);
+    color: var(--dark-text);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.btn-secondary:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Responsive - Tablet */
+@media (max-width: 900px) {
+    .attendance-controls {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .attendance-controls .date-picker {
+        width: 100%;
+    }
+
+    .bulk-actions {
+        width: 100%;
+    }
+
+    .bulk-actions .btn {
+        flex: 1;
+        justify-content: center;
+    }
+}
+
+/* Responsive - Mobile */
+@media (max-width: 768px) {
+    .desktop-view {
+        display: none;
+    }
+
+    .mobile-view {
+        display: block;
+    }
+
+    .page-header h2 {
+        font-size: 1.5rem;
+    }
+
+    .attendance-submit {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        margin: 0;
+        border-radius: 20px 20px 0 0;
+        z-index: 50;
+        padding: 15px 20px;
+    }
+
+    .attendance-submit .btn {
+        flex: 1;
+    }
+
+    .attendance-submit .btn-primary {
+        flex: 2;
+    }
+
+    /* Add padding at bottom to account for fixed submit bar */
+    #attendanceForm {
+        padding-bottom: 100px;
+    }
+}
+
+/* Responsive - Small Mobile */
+@media (max-width: 480px) {
+    .container {
+        padding: 15px 10px;
+    }
+
+    .attendance-controls {
+        padding: 15px;
+    }
+
+    .bulk-actions {
+        flex-direction: column;
+    }
+
+    .bulk-actions .btn {
+        width: 100%;
+    }
+
+    .student-card {
+        padding: 14px;
+    }
+
+    .student-avatar {
+        width: 42px;
+        height: 42px;
+        font-size: 1rem;
+    }
+
+    .status-btn {
+        padding: 12px 10px;
+        font-size: 0.9rem;
+    }
+
+    .btn-lg {
+        padding: 14px 20px;
+        font-size: 1rem;
+    }
+}
+
+/* ===== MOBILE NAVIGATION SYSTEM ===== */
+
+/* Mobile Header - Hidden on desktop */
+.mobile-header {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 60px;
+    background-color: var(--dark-card);
+    z-index: 150;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 15px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+}
+
+.mobile-logo {
+    font-size: 1.3rem;
+    font-weight: bold;
+    color: var(--primary-color);
+}
+
+.mobile-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* Hamburger Button */
+.hamburger-btn {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 5px;
+    width: 40px;
+    height: 40px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 8px;
+    transition: background-color 0.3s;
+}
+
+.hamburger-btn:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.hamburger-line {
+    width: 24px;
+    height: 3px;
+    background-color: var(--dark-text);
+    border-radius: 2px;
+    transition: all 0.3s ease;
+}
+
+.hamburger-btn.active .hamburger-line:nth-child(1) {
+    transform: rotate(45deg) translate(6px, 6px);
+}
+
+.hamburger-btn.active .hamburger-line:nth-child(2) {
+    opacity: 0;
+}
+
+.hamburger-btn.active .hamburger-line:nth-child(3) {
+    transform: rotate(-45deg) translate(6px, -6px);
+}
+
+/* Sidebar Overlay */
+.sidebar-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 99;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.sidebar-overlay.active {
+    display: block;
+    opacity: 1;
+}
+
+/* Sidebar Close Button - Mobile only */
+.sidebar-close-btn {
+    display: none;
+    background: none;
+    border: none;
+    color: var(--dark-text);
+    font-size: 1.5rem;
+    cursor: pointer;
+    padding: 5px;
+    border-radius: 50%;
+    transition: background-color 0.3s;
+}
+
+.sidebar-close-btn:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Desktop/Mobile visibility helpers */
+.desktop-only {
+    display: block;
+}
+
+.mobile-only {
+    display: none;
+}
+
+/* Prevent body scroll when sidebar is open */
+body.sidebar-open {
+    overflow: hidden;
+}
+
+/* ===== RESPONSIVE TABLES - CARD VIEW ON MOBILE ===== */
+
+/* Mobile Table Card Styles */
+.table-responsive-cards {
+    display: none;
+}
+
+.table-card {
+    background-color: var(--dark-card);
+    border-radius: var(--border-radius);
+    padding: 16px;
+    margin-bottom: 12px;
+}
+
+.table-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 12px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.table-card-title {
+    font-weight: 600;
+    font-size: 1rem;
+    color: var(--primary-color);
+}
+
+.table-card-subtitle {
+    font-size: 0.85rem;
+    opacity: 0.7;
+    margin-top: 4px;
+}
+
+.table-card-body {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.table-card-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.9rem;
+}
+
+.table-card-label {
+    opacity: 0.7;
+}
+
+.table-card-value {
+    font-weight: 500;
+}
+
+.table-card-actions {
+    display: flex;
+    gap: 8px;
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.table-card-actions .btn {
+    flex: 1;
+    text-align: center;
+    padding: 10px;
+    font-size: 0.85rem;
+}
+
+/* ===== RESPONSIVE FORMS ===== */
+
+.form-responsive {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+}
+
+/* ===== RESPONSIVE CARD GRID ===== */
+
+.cards-responsive {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 20px;
+}
+
+/* ===== RESPONSIVE ACTION BAR ===== */
+
+.action-bar-responsive {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+/* ===== MOBILE RESPONSIVE BREAKPOINTS ===== */
+
+@media (max-width: 768px) {
+    /* Show mobile header */
+    .mobile-header {
+        display: flex;
+    }
+
+    /* Show mobile-only elements */
+    .mobile-only {
+        display: block;
+    }
+
+    /* Hide desktop-only elements */
+    .desktop-only {
+        display: none !important;
+    }
+
+    /* Sidebar mobile behavior */
+    .sidebar {
+        transform: translateX(-100%);
+        transition: transform 0.3s ease;
+        width: 280px;
+    }
+
+    .sidebar.mobile-open {
+        transform: translateX(0);
+    }
+
+    .sidebar-header {
+        padding: 20px 15px;
+    }
+
+    .sidebar-close-btn {
+        display: block;
+    }
+
+    /* Adjust main content for mobile header */
+    .main-content {
+        margin-left: 0;
+        margin-top: 60px;
+        padding: 20px 15px;
+        min-height: calc(100vh - 60px);
+    }
+
+    /* Notification panel mobile */
+    .notification-panel {
+        left: 0;
+        width: 100%;
+        max-width: 100%;
+        top: 60px;
+        max-height: calc(100vh - 60px);
+    }
+
+    /* Page header adjustments */
+    .page-header {
+        margin-bottom: 20px;
+    }
+
+    .page-header h2 {
+        font-size: 1.5rem;
+    }
+
+    /* Container padding */
+    .container {
+        padding: 15px;
+    }
+
+    /* Stats grid */
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+    }
+
+    .stat-card {
+        padding: 15px;
+    }
+
+    .stat-card .stat-number {
+        font-size: 1.8rem;
+    }
+
+    /* Overview stats */
+    .overview-stats {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+    }
+
+    .overview-stats .stat-card {
+        flex-direction: column;
+        text-align: center;
+        gap: 10px;
+    }
+
+    .overview-stats .stat-card .stat-icon {
+        margin: 0 auto;
+    }
+
+    /* Course cards */
+    .course-cards {
+        grid-template-columns: 1fr;
+    }
+
+    .course-summary-card .course-actions {
+        flex-direction: column;
+    }
+
+    .course-summary-card .course-actions .btn {
+        width: 100%;
+        text-align: center;
+    }
+
+    .course-stats {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    /* Quick actions */
+    .quick-actions {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+    }
+
+    .quick-action-card {
+        padding: 15px;
+    }
+
+    .quick-action-card .quick-icon {
+        font-size: 1.5rem;
+    }
+
+    /* Cards grid */
+    .cards-grid {
+        grid-template-columns: 1fr;
+    }
+
+    /* Percentage circle */
+    .percentage-circle {
+        width: 100px;
+        height: 100px;
+        font-size: 1.3rem;
+    }
+
+    /* Tables - convert to cards on mobile */
+    .table-container table {
+        display: none;
+    }
+
+    .table-container .table-responsive-cards {
+        display: block;
+    }
+
+    /* Action bar */
+    .action-bar {
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .action-bar .btn {
+        width: 100%;
+        text-align: center;
+    }
+
+    .view-toggle {
+        width: 100%;
+        justify-content: center;
+    }
+
+    /* Filter tabs */
+    .filter-tabs {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .filter-tabs .tab {
+        flex: 1;
+        text-align: center;
+    }
+
+    /* Event cards */
+    .event-card {
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .event-time {
+        font-size: 0.9rem;
+    }
+
+    .event-actions {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
+    }
+
+    /* Week navigation */
+    .week-navigation {
+        flex-direction: column;
+        gap: 15px;
+        text-align: center;
+    }
+
+    .week-nav-btn {
+        width: 100%;
+    }
+
+    /* Timetable grid */
+    .timetable-grid th,
+    .timetable-grid td {
+        padding: 4px;
+        font-size: 0.75rem;
+    }
+
+    .day-header {
+        min-width: 70px;
+    }
+
+    .grid-item {
+        padding: 4px;
+        font-size: 0.7rem;
+    }
+
+    .timetable-legend {
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    /* Forms */
+    .form-row {
+        grid-template-columns: 1fr;
+    }
+
+    .form-row.two-cols {
+        grid-template-columns: 1fr;
+    }
+
+    /* Settings */
+    .setting-row {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+    }
+
+    .setting-controls {
+        width: 100%;
+    }
+
+    /* Modal */
+    .modal-content {
+        width: 95%;
+        padding: 20px;
+        margin: 10px;
+    }
+
+    /* Buttons */
+    .btn {
+        padding: 12px 20px;
+    }
+
+    .btn-block-mobile {
+        width: 100%;
+        display: block;
+        text-align: center;
+    }
+
+    /* Notification banner */
+    .notification-banner {
+        padding: 12px 15px;
+        font-size: 0.9rem;
+    }
+
+    /* Alerts */
+    .alert {
+        padding: 12px;
+        font-size: 0.9rem;
+    }
+
+    /* Schedule management */
+    .filter-section {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .filter-section select {
+        min-width: 100%;
+    }
+
+    .schedule-list-item {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .schedule-list-actions {
+        width: 100%;
+        margin-top: 10px;
+    }
+
+    .schedule-list-actions .btn {
+        flex: 1;
+    }
+
+    /* Login page adjustments */
+    .login-box {
+        padding: 25px 20px;
+        margin: 15px;
+    }
+
+    .login-box h1 {
+        font-size: 1.5rem;
+    }
+}
+
+/* ===== EXTRA SMALL DEVICES ===== */
+
+@media (max-width: 480px) {
+    /* Stats grid single column */
+    .stats-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .overview-stats {
+        grid-template-columns: 1fr;
+    }
+
+    /* Quick actions single column */
+    .quick-actions {
+        grid-template-columns: 1fr;
+    }
+
+    /* Smaller font sizes */
+    .page-header h2 {
+        font-size: 1.3rem;
+    }
+
+    .stat-card .stat-number {
+        font-size: 1.5rem;
+    }
+
+    /* Course stats */
+    .course-stats {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 8px;
+    }
+
+    .mini-stat {
+        padding: 8px;
+    }
+
+    .mini-stat .mini-value {
+        font-size: 1rem;
+    }
+
+    /* Timetable - make scrollable */
+    .timetable-grid-wrapper {
+        margin: 0 -15px;
+        padding: 0 15px;
+    }
+
+    /* View toggle */
+    .view-toggle {
+        flex-direction: column;
+    }
+
+    .toggle-btn {
+        width: 100%;
+        justify-content: center;
+    }
+
+    /* Sidebar width on small phones */
+    .sidebar {
+        width: 100%;
+    }
+
+    /* User profile in sidebar */
+    .user-profile {
+        padding: 15px;
+    }
+
+    .user-profile .avatar {
+        width: 40px;
+        height: 40px;
+        font-size: 1rem;
+    }
+
+    /* Form inputs larger touch targets */
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+        padding: 14px 16px;
+        font-size: 16px; /* Prevents zoom on iOS */
+    }
+
+    /* Buttons larger touch targets */
+    .btn {
+        padding: 14px 20px;
+        min-height: 48px;
+    }
+
+    /* Table cards */
+    .table-card {
+        padding: 14px;
+    }
+}
+
+/* ===== LANDSCAPE PHONE ADJUSTMENTS ===== */
+
+@media (max-width: 768px) and (orientation: landscape) {
+    .mobile-header {
+        height: 50px;
+    }
+
+    .main-content {
+        margin-top: 50px;
+    }
+
+    .sidebar {
+        max-height: 100vh;
+        overflow-y: auto;
+    }
+
+    .modal-content {
+        max-height: 80vh;
+    }
+}
+
+/* ===== TABLET ADJUSTMENTS ===== */
+
+@media (min-width: 769px) and (max-width: 1024px) {
+    .sidebar {
+        width: 220px;
+    }
+
+    .main-content {
+        margin-left: 220px;
+    }
+
+    .notification-panel {
+        left: 220px;
+    }
+
+    .course-cards {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .stats-grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+
+/* ===== TOUCH DEVICE OPTIMIZATIONS ===== */
+
+@media (hover: none) and (pointer: coarse) {
+    /* Larger touch targets */
+    .nav-item {
+        padding: 15px 20px;
+    }
+
+    .btn {
+        min-height: 48px;
+    }
+
+    /* Remove hover effects that don't work on touch */
+    .card:hover {
+        transform: none;
+    }
+
+    .course-summary-card:hover {
+        transform: none;
+    }
+
+    .event-card:hover {
+        transform: none;
+    }
+
+    .quick-action-card:hover {
+        transform: none;
+        background-color: var(--dark-card);
+    }
+
+    /* Active states for touch */
+    .btn:active {
+        transform: scale(0.98);
+        opacity: 0.9;
+    }
+
+    .card:active {
+        transform: scale(0.99);
+    }
+
+    .nav-item:active {
+        background-color: rgba(79, 70, 229, 0.2);
+    }
+}
+
+/* ===== PRINT STYLES ===== */
+
+@media print {
+    .mobile-header,
+    .sidebar,
+    .sidebar-overlay,
+    .notification-panel,
+    .notification-bell,
+    .btn,
+    .action-bar {
+        display: none !important;
+    }
+
+    .main-content {
+        margin: 0;
+        padding: 0;
+    }
+
+    .container {
+        max-width: 100%;
+        padding: 0;
+    }
+
+    body {
+        background: white;
+        color: black;
+    }
+
+    .card,
+    .stat-card,
+    .course-summary-card {
+        box-shadow: none;
+        border: 1px solid #ddd;
+    }
+
+    table {
+        display: table !important;
+    }
+
+    .table-responsive-cards {
+        display: none !important;
+    }
+}

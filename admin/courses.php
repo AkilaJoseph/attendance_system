@@ -207,10 +207,13 @@ $courses_result = $conn->query("SELECT c.course_id, c.course_name, c.course_code
             <tbody>
                 <?php
                 $courses_result->data_seek(0);
+                $courses_array = [];
                 while($course = $courses_result->fetch_assoc()):
                     // Get enrolled students count
                     $count_query = $conn->query("SELECT COUNT(*) as cnt FROM enrollments WHERE course_id=" . $course['course_id']);
                     $student_count = $count_query->fetch_assoc()['cnt'];
+                    $course['student_count'] = $student_count;
+                    $courses_array[] = $course;
                 ?>
                 <tr>
                     <td><?php echo $course['course_id']; ?></td>
@@ -230,6 +233,37 @@ $courses_result = $conn->query("SELECT c.course_id, c.course_name, c.course_code
                 <?php endwhile; ?>
             </tbody>
         </table>
+
+        <!-- Mobile Card View -->
+        <div class="table-responsive-cards">
+            <?php foreach($courses_array as $course): ?>
+            <div class="table-card">
+                <div class="table-card-header">
+                    <div>
+                        <div class="table-card-title"><?php echo htmlspecialchars($course['course_code']); ?></div>
+                        <div class="table-card-subtitle"><?php echo htmlspecialchars($course['course_name']); ?></div>
+                    </div>
+                    <span class="badge" style="background-color: var(--primary-color); color: white; padding: 4px 10px; border-radius: 12px; font-size: 0.8rem;">
+                        <?php echo $course['student_count']; ?> students
+                    </span>
+                </div>
+                <div class="table-card-body">
+                    <div class="table-card-row">
+                        <span class="table-card-label">Lecturer</span>
+                        <span class="table-card-value"><?php echo htmlspecialchars($course['lecturer_name'] ?? 'Not Assigned'); ?></span>
+                    </div>
+                </div>
+                <div class="table-card-actions">
+                    <button class="btn btn-primary" onclick='editCourse(<?php echo json_encode($course); ?>)'>Edit</button>
+                    <form action="" method="POST" style="flex: 1;" onsubmit="return confirm('Delete this course?');">
+                        <input type="hidden" name="action" value="delete">
+                        <input type="hidden" name="course_id" value="<?php echo $course['course_id']; ?>">
+                        <button type="submit" class="btn btn-danger" style="width: 100%;">Delete</button>
+                    </form>
+                </div>
+            </div>
+            <?php endforeach; ?>
+        </div>
     </div>
 </div>
 

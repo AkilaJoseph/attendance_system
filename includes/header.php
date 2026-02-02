@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="theme-color" content="#4f46e5">
     <meta name="description" content="Attendance Management System for Educational Institutions">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -31,14 +31,34 @@
 <body>
     <?php if(isset($_SESSION['user_id'])): ?>
     <div class="app-layout">
+        <!-- Mobile Header -->
+        <header class="mobile-header">
+            <button class="hamburger-btn" id="hamburgerBtn" onclick="toggleMobileSidebar()">
+                <span class="hamburger-line"></span>
+                <span class="hamburger-line"></span>
+                <span class="hamburger-line"></span>
+            </button>
+            <div class="mobile-logo">Attendance</div>
+            <div class="mobile-actions">
+                <div class="notification-bell" onclick="toggleNotificationPanel()">
+                    <span class="bell-icon">&#128276;</span>
+                    <span class="badge" id="reminderBadgeMobile" style="display: none;">0</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Sidebar Overlay -->
+        <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleMobileSidebar()"></div>
+
         <!-- Sidebar -->
-        <aside class="sidebar">
+        <aside class="sidebar" id="sidebar">
             <div class="sidebar-header">
                 <div class="logo">Attendance</div>
-                <div class="notification-bell" id="notificationBell" onclick="toggleNotificationPanel()">
+                <div class="notification-bell desktop-only" id="notificationBell" onclick="toggleNotificationPanel()">
                     <span class="bell-icon">&#128276;</span>
                     <span class="badge" id="reminderBadge" style="display: none;">0</span>
                 </div>
+                <button class="sidebar-close-btn mobile-only" onclick="toggleMobileSidebar()">&#10005;</button>
             </div>
 
             <div class="user-profile">

@@ -142,7 +142,11 @@ $users_result = $conn->query("SELECT user_id, name, email, role FROM users ORDER
                 </tr>
             </thead>
             <tbody>
-                <?php while($user = $users_result->fetch_assoc()): ?>
+                <?php
+                $users_array = [];
+                while($user = $users_result->fetch_assoc()) {
+                    $users_array[] = $user;
+                ?>
                 <tr>
                     <td><?php echo $user['user_id']; ?></td>
                     <td><?php echo htmlspecialchars($user['name']); ?></td>
@@ -159,9 +163,36 @@ $users_result = $conn->query("SELECT user_id, name, email, role FROM users ORDER
                         <?php endif; ?>
                     </td>
                 </tr>
-                <?php endwhile; ?>
+                <?php } ?>
             </tbody>
         </table>
+
+        <!-- Mobile Card View -->
+        <div class="table-responsive-cards">
+            <?php foreach($users_array as $user): ?>
+            <div class="table-card">
+                <div class="table-card-header">
+                    <div>
+                        <div class="table-card-title"><?php echo htmlspecialchars($user['name']); ?></div>
+                        <div class="table-card-subtitle"><?php echo htmlspecialchars($user['email']); ?></div>
+                    </div>
+                    <span class="badge" style="background-color: var(--primary-color); color: white; padding: 4px 10px; border-radius: 12px; font-size: 0.8rem;">
+                        <?php echo ucfirst($user['role']); ?>
+                    </span>
+                </div>
+                <div class="table-card-actions">
+                    <button class="btn btn-primary" onclick="editUser(<?php echo htmlspecialchars(json_encode($user)); ?>)">Edit</button>
+                    <?php if($user['user_id'] != $_SESSION['user_id']): ?>
+                    <form action="" method="POST" style="flex: 1;" onsubmit="return confirm('Are you sure you want to delete this user?');">
+                        <input type="hidden" name="action" value="delete">
+                        <input type="hidden" name="user_id" value="<?php echo $user['user_id']; ?>">
+                        <button type="submit" class="btn btn-danger" style="width: 100%;">Delete</button>
+                    </form>
+                    <?php endif; ?>
+                </div>
+            </div>
+            <?php endforeach; ?>
+        </div>
     </div>
 </div>
 

@@ -3,7 +3,7 @@
 ## Complete Technical Documentation
 
 **Project:** Attendance Management System
-**Developer:** [Your Name]
+**Developer:** Akila Body
 **Date:** February 2026
 
 ---

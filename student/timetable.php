@@ -1,7 +1,6 @@
 <?php
 session_start();
 include '../config/db_connect.php';
-include '../includes/header.php';
 include '../includes/functions.php';
 
 // Security: Check if user is a student
@@ -9,6 +8,8 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] != 'student') {
     header("Location: ../index.php");
     exit();
 }
+
+include '../includes/header.php';
 
 $student_id = $_SESSION['user_id'];
 

@@ -243,3 +243,18 @@ INSERT INTO user_notification_settings (user_id, notification_type, is_enabled, 
 
 -- Note: attempting to add the column when it already exists will raise a duplicate-column error (#1060). Check before running.
 
+-- ==================================================
+-- 11. Waitlist (Landing page interest signups)
+-- ==================================================
+CREATE TABLE IF NOT EXISTS waitlist (
+    id          INT UNSIGNED  NOT NULL AUTO_INCREMENT,
+    first_name  VARCHAR(80)   NOT NULL,
+    last_name   VARCHAR(80)   NOT NULL,
+    email       VARCHAR(200)  NOT NULL,
+    phone       VARCHAR(30)   DEFAULT NULL,
+    role        VARCHAR(50)   DEFAULT NULL,
+    institution VARCHAR(200)  DEFAULT NULL,
+    created_at  DATETIME      NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (id),
+    UNIQUE KEY uq_waitlist_email (email)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

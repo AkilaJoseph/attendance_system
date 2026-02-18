@@ -5,13 +5,11 @@ include '../includes/functions.php';
 
 // Security: Check if user is an admin
 if (!isset($_SESSION['user_id']) || $_SESSION['role'] != 'admin') {
-    header("Location: ../index.php");
+    header("Location: ../login.php");
     exit();
 }
 
-include '../includes/header.php';
-
-// Handle form submissions
+// Handle form submissions BEFORE any output (prevents headers-already-sent)
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if (isset($_POST['action'])) {
         switch ($_POST['action']) {
@@ -88,6 +86,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 // Get all users
 $users_result = $conn->query("SELECT user_id, name, email, role FROM users ORDER BY role, name");
+
+include '../includes/header.php';
 ?>
 
 <div class="container">

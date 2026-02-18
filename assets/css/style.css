@@ -137,17 +137,45 @@ a {
 }
 
 .sidebar-footer {
-    padding: 15px 0;
+    padding: 10px 0;
     border-top: 1px solid rgba(255, 255, 255, 0.1);
+    flex-shrink: 0; /* never get squeezed off-screen */
 }
 
 .sidebar-footer .logout {
     color: var(--danger-color);
+    min-height: 48px; /* WCAG touch target */
 }
 
 .sidebar-footer .logout:hover {
     background-color: rgba(239, 68, 68, 0.15);
     border-left-color: var(--danger-color);
+}
+
+.sidebar-footer .logout:active {
+    background-color: rgba(239, 68, 68, 0.3);
+    transform: scale(0.98);
+}
+
+/* PWA install button in sidebar */
+.pwa-install-btn {
+    width: 100%;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: inherit;
+    text-align: left;
+    color: var(--primary-color);
+    min-height: 48px;
+}
+
+.pwa-install-btn:hover {
+    background-color: rgba(79, 70, 229, 0.12);
+}
+
+.pwa-install-btn:active {
+    background-color: rgba(79, 70, 229, 0.25);
 }
 
 /* ===== Main Content ===== */
@@ -2690,11 +2718,13 @@ body.sidebar-open {
         position: fixed;
         left: 0;
         top: 0;
-        height: 100vh;
+        height: 100vh;       /* fallback */
+        height: 100dvh;      /* dynamic viewport — prevents footer cut-off on mobile */
         width: 280px;
         transform: translateX(-100%);
         transition: transform 0.3s ease;
         z-index: 200;
+        overflow: hidden;    /* clip children to fixed height */
     }
 
     .sidebar.mobile-open {

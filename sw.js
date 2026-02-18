@@ -5,8 +5,8 @@ const DYNAMIC_CACHE = 'attendance-dynamic-v1.0.0';
 
 // Files to cache immediately
 const STATIC_ASSETS = [
-  './',
-  './index.php',
+  './landing.php',
+  './login.php',
   './assets/css/style.css',
   './assets/js/script.js',
   './manifest.json',
@@ -14,14 +14,19 @@ const STATIC_ASSETS = [
   './assets/images/icon-512.png'
 ];
 
-// Install event - cache static assets
+// Install event - cache static assets individually so one failure doesn't abort all
 self.addEventListener('install', event => {
   console.log('Service Worker: Installing...');
   event.waitUntil(
     caches.open(STATIC_CACHE)
       .then(cache => {
         console.log('Service Worker: Caching static assets');
-        return cache.addAll(STATIC_ASSETS);
+        // Use individual adds so a single missing file doesn't break the whole install
+        return Promise.allSettled(
+          STATIC_ASSETS.map(url =>
+            cache.add(url).catch(err => console.warn('SW: could not cache', url, err))
+          )
+        );
       })
       .then(() => self.skipWaiting())
   );

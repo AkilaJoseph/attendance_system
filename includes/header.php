@@ -13,7 +13,7 @@
     <link rel="icon" type="image/png" sizes="192x192" href="../assets/images/icon-192.png">
     <title>Attendance System</title>
     <link rel="stylesheet" href="../assets/css/style.css">
-    <!-- Register Service Worker -->
+    <!-- Register Service Worker & PWA install prompt -->
     <script>
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', function() {
@@ -24,6 +24,31 @@
                     .catch(function(error) {
                         console.log('Service Worker registration failed:', error);
                     });
+            });
+        }
+
+        // Capture the install prompt and show "Install App" button
+        let deferredInstallPrompt = null;
+        window.addEventListener('beforeinstallprompt', function(e) {
+            e.preventDefault();
+            deferredInstallPrompt = e;
+            var btn = document.getElementById('pwaInstallBtn');
+            if (btn) btn.style.display = 'flex';
+        });
+
+        window.addEventListener('appinstalled', function() {
+            deferredInstallPrompt = null;
+            var btn = document.getElementById('pwaInstallBtn');
+            if (btn) btn.style.display = 'none';
+        });
+
+        function triggerPWAInstall() {
+            if (!deferredInstallPrompt) return;
+            deferredInstallPrompt.prompt();
+            deferredInstallPrompt.userChoice.then(function(result) {
+                deferredInstallPrompt = null;
+                var btn = document.getElementById('pwaInstallBtn');
+                if (btn) btn.style.display = 'none';
             });
         }
     </script>
@@ -141,6 +166,10 @@
             </nav>
 
             <div class="sidebar-footer">
+                <button id="pwaInstallBtn" onclick="triggerPWAInstall()" class="nav-item pwa-install-btn" style="display:none;">
+                    <span class="nav-icon">📱</span>
+                    Install App
+                </button>
                 <a href="../logout.php" class="nav-item logout">
                     <span class="nav-icon">&#10140;</span>
                     Logout
